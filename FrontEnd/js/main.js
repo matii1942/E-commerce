@@ -19,7 +19,7 @@ if (productoEnCarritoLS) {
 
 const traerProductos = async () => {
     try {
-        const response = await fetch("http://localhost:3000/api/productos");
+        const response = await fetch("./api/productos");
         const data = await response.json();
         console.log("Datos recibidos:", data);
         productos = data;

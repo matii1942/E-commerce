@@ -1,0 +1,61 @@
+# Levanta la tienda entera con un comando:
+#
+#   docker compose up -d --build
+#
+# Y después, una sola vez, sembrar el catálogo:
+#
+#   docker compose exec api npm run seed
+
+# Sin esto, compose deduce el nombre del proyecto de la carpeta — y la carpeta
+# se llega por un enlace simbólico, así que avisa que lo está adivinando.
+name: tienda
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: tienda-mongo
+    restart: unless-stopped
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - tienda-mongodata:/data/db
+    healthcheck:
+      # Sano significa que responde consultas, no que el proceso arrancó.
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: tienda-api
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        # Esperar a que esté sana, no a que exista: sin esto la API arranca
+        # antes que la base y muere en el primer intento de conexión.
+        condition: service_healthy
+    environment:
+      PORT: 3001
+      # Dentro de la red de compose, el host es el nombre del servicio.
+      MONGODB_URI: mongodb://mongo:27017/tienda
+      # Los dos puntos y el signo de pregunta hacen que compose falle con ese
+      # mensaje si la variable no está. Un valor por defecto para un secreto
+      # sería peor: la aplicación levantaría con la puerta abierta.
+      JWT_SECRET: ${JWT_SECRET:?falta JWT_SECRET en .env — ver .env.example}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-1h}
+    ports:
+      - "${PORT:-3001}:3001"
+    volumes:
+      # La tienda montada en vivo: editás el HTML o el JavaScript, refrescás
+      # el navegador y listo, sin reconstruir la imagen. En sólo lectura,
+      # para que el contenedor no pueda escribir sobre tu código fuente.
+      #
+      # La imagen igual lleva su propia copia (el COPY del Dockerfile), así
+      # que sigue siendo autosuficiente para desplegar.
+      - ./apps/web:/app/apps/web:ro
+
+volumes:
+  tienda-mongodata:

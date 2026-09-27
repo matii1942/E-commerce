@@ -1,0 +1,13 @@
+# --- secretos ---
+.env
+.env.*
+!.env.example
+
+# --- dependencias ---
+node_modules/
+
+# --- logs y sistema ---
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db

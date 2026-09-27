@@ -1,0 +1,8 @@
+# Sin esto, el contexto de build sube los node_modules locales — 51 MB en la
+# última corrida, 14 segundos de transferencia — para después descartarlos,
+# porque la imagen instala los suyos.
+node_modules
+**/node_modules
+.git
+.env
+*.log

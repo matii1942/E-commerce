@@ -314,3 +314,121 @@ p{
 .disabled {
     display: none;
 }
+/* ---------------------------------------------------------------------
+ * Cuenta, sesion y avisos del carrito.
+ *
+ * Agregado junto con el pedido de verdad: antes la tienda no tenia donde
+ * entrar ni donde mostrar por que una compra no salio.
+ * ------------------------------------------------------------------ */
+
+.sesion-activa {
+    display: block;
+    color: var(--clr-gray);
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cuenta-paneles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+.cuenta-panel {
+    background-color: var(--clr-white);
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+.cuenta-panel h3 {
+    color: var(--clr-main);
+    margin-bottom: 1rem;
+}
+
+.cuenta-panel form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.cuenta-panel label {
+    color: var(--clr-black);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+.cuenta-panel input {
+    /*
+     * min-width: 0 porque un input dentro de un contenedor de grilla no se
+     * achica solo: toma su ancho por defecto y desborda la columna en
+     * pantallas angostas.
+     */
+    min-width: 0;
+    padding: 0.5rem 0.75rem;
+    border: 2px solid var(--clr-gray);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+
+.cuenta-panel input:focus {
+    outline: 2px solid var(--clr-main);
+    outline-offset: 1px;
+}
+
+.cuenta-panel button {
+    margin-top: 1rem;
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: var(--clr-main);
+    color: var(--clr-white);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.cuenta-panel button:hover {
+    background-color: #5d48b0;
+}
+
+.cuenta-ayuda {
+    color: #6b6b6b;
+    font-size: 0.8rem;
+}
+
+/*
+ * Los avisos llevan el color en `data-tipo` y no en una clase por estado,
+ * asi que el JavaScript escribe un atributo en vez de agregar y sacar clases
+ * que se pueden quedar pegadas de un aviso al siguiente.
+ */
+.cuenta-mensaje,
+.carrito-aviso {
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    background-color: var(--clr-white);
+    border-left: 4px solid var(--clr-main);
+}
+
+.cuenta-mensaje[data-tipo="error"],
+.carrito-aviso[data-tipo="error"] {
+    border-left-color: #c0392b;
+    color: #c0392b;
+}
+
+.cuenta-mensaje[data-tipo="ok"] {
+    border-left-color: #1e8449;
+    color: #1e8449;
+}
+
+.carrito-aviso[data-tipo="aviso"] {
+    border-left-color: #b9770e;
+    color: #b9770e;
+}
+
+.carrito-acciones-comprar:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}

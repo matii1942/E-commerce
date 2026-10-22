@@ -57,6 +57,20 @@ async function sembrar() {
           image: producto.img,
           category: idPorSlug.get(producto.categoria.id),
           status: "DISPONIBLE",
+
+          /*
+           * Stock inicial. El catálogo de origen no trae ninguno —- la tienda
+           * vendía de un archivo y no llevaba cuenta de nada— así que el
+           * campo existía en el esquema y estaba vacío en todos los productos.
+           * Sin esto, el control de stock del pedido no tiene contra qué
+           * comparar.
+           *
+           * Va en `$set` y no en `$setOnInsert`: sembrar de nuevo repone el
+           * stock, que es justamente lo que uno quiere de una semilla y lo
+           * que esta promete arriba —- sembrar dos veces deja la base igual
+           * que sembrar una.
+           */
+          quantity: 10,
         },
       },
       { upsert: true },

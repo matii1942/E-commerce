@@ -6,15 +6,10 @@ let productoAgregado = document.querySelectorAll(".button-add");
 const numero = document.querySelector("#numero");
 
 
-let productoEnCarrito;
-let productoEnCarritoLS = localStorage.getItem("productosEnCarrito");
-
-if (productoEnCarritoLS) {
-    productoEnCarrito = JSON.parse(productoEnCarritoLS);
-    actualizarNumero();
-} else {
-    productoEnCarrito = [];
-}
+// El carrito vive en Carrito (js/carrito-guardado.js): `{ id, cantidad }` y
+// nada mas. El precio no se guarda nunca de este lado.
+let productoEnCarrito = Carrito.leer();
+actualizarNumero();
 
 
 // La API vive en el mismo origen que esta página: el servidor de Express
@@ -73,24 +68,30 @@ function actualizarBotonesAgregar() {
 
 function agregarAlCarrito(e) {
     const idBoton = e.currentTarget.id;
-    const productoAgregado = productos.find(producto => producto.id === idBoton);
+    const yaEsta = productoEnCarrito.find(item => item.id === idBoton);
 
-    if (productoEnCarrito.some(producto => producto.id === idBoton)) {
-        const index = productoEnCarrito.findIndex(producto => producto.id === idBoton);
-        productoEnCarrito[index].cantidad++;
+    if (yaEsta) {
+        yaEsta.cantidad++;
     } else {
-        // Una copia, no el objeto del catálogo. find devuelve una referencia:
-        // escribirle `cantidad` se la escribía al producto del catálogo, y el
-        // carrito y la vitrina terminaban compartiendo el mismo objeto.
-        productoEnCarrito.push({ ...productoAgregado, cantidad: 1 });
+        /*
+         * Solo el identificador y la cantidad.
+         *
+         * Antes se guardaba una copia del producto entero —`{ ...productoAgregado }`—
+         * para no compartir la referencia con el catalogo, que era un arreglo
+         * correcto a otro problema. Pero esa copia se llevaba el precio, y un
+         * precio guardado en el navegador es un precio que el visitante puede
+         * editar. Guardando el id no hay nada que editar: el precio lo pone el
+         * servidor al dibujar y lo vuelve a poner al cobrar.
+         */
+        productoEnCarrito.push({ id: idBoton, cantidad: 1 });
     }
+
     actualizarNumero();
-    localStorage.setItem("productosEnCarrito", JSON.stringify(productoEnCarrito));
+    Carrito.guardar(productoEnCarrito);
 }
 
 function actualizarNumero() {
-    let nuevoNumero = productoEnCarrito.reduce((acumulador, producto) => acumulador + producto.cantidad, 0);
-    numero.innerText = nuevoNumero;
+    numero.innerText = Carrito.unidades(productoEnCarrito);
 }
 
 

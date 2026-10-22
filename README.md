@@ -1,12 +1,14 @@
 # Tienda
 
-A storefront with a product catalogue, category filtering and a cart, served by
-an Express API over MongoDB. Two applications in one repository, brought up
-with a single command.
+A storefront with a product catalogue, category filtering, accounts and a cart
+that checks out, served by an Express API over MongoDB. Two applications in one
+repository, brought up with a single command.
 
-> **Status:** the catalogue is live against the database. Registration and
-> login in the storefront are next — the API already has users, password
-> hashing and token authentication; the front end does not use them yet.
+> **Status:** the catalogue, registration, login and ordering are live against
+> the database. **The server prices every order.** The browser stores product
+> identifiers and quantities and nothing else; it sends identifiers and
+> quantities to `POST /api/orders`, and the API looks the prices up, checks the
+> stock and computes the total itself.
 
 ---
 
@@ -72,6 +74,8 @@ leaves the database exactly as seeding once.
 | `POST /api/users/create` | Register |
 | `POST /api/users/login` | Returns a signed token |
 | `GET /api/users/getAll` · `PUT` · `DELETE` | Requires a token |
+| `POST /api/orders` | Place an order: identifiers and quantities only — requires a token |
+| `GET /api/orders` | The orders of whoever is asking — requires a token |
 
 ## What was wrong, and what was done about it
 
@@ -136,16 +140,42 @@ the defects found by reading it, in the order they matter.
 - The storefront's cart shared object references with the catalogue: `find`
   returns the object itself, so writing a quantity onto a cart item wrote it
   onto the product in the shop window too.
+- **The cart was priced in the browser, and "Buy now" bought nothing.** The
+  button emptied the array, wrote the empty cart back and showed a thank-you
+  message: no request left the page, no order existed, no stock moved. So the
+  editable price in `localStorage` was not exploitable — it only misled the
+  person editing their own browser. The design was set up to produce the bug
+  the moment anyone connected the checkout, because the cart carried the price
+  and the obvious next step is to post the cart as it stands. The checkout was
+  built the other way round instead: the browser keeps `{ id, cantidad }`, and
+  the server looks up what anything costs.
+- The cart's total read `$3000` in the markup before anything had been
+  calculated — a placeholder that looked like a figure.
 
 ## Known limitations
 
-- **The cart is priced in the browser.** Quantities and prices live in
-  `localStorage`, so the total is computed from numbers a user can edit from
-  the console. A real cart stores identifiers and quantities and lets the
-  server price them. This is the next thing to fix.
 - **There are no automated tests.** Every defect above was found by reading,
   not by a failing test, which is exactly the argument for having them.
-- **The storefront does not use the authentication the API has.** Registration
-  and login exist as endpoints and have no interface yet.
+- **Prices are floating-point numbers in the catalogue.** The order computes
+  in integer cents so a total does not drift — `1299.99 × 3` is `3899.97`, not
+  `3899.9700000000003` — but the stored price is still a float. Storing cents
+  as integers in the first place is a migration of the catalogue and has not
+  been done.
+- **Decrementing stock is a compensating rollback, not a transaction.**
+  MongoDB offers transactions only on a replica set, and `docker-compose`
+  brings up a single instance. Each line is decremented on its own and the
+  ones already done are put back if a later one fails. Between the decrement
+  and the rollback the stock is briefly wrong, and if the process dies in
+  between it stays wrong. The condition on the update (`quantity: { $gte: n }`)
+  *is* atomic, so two simultaneous buyers of the last unit cannot both win.
+- **The session token lives in `localStorage`.** Any script that manages to run
+  on the page can read it. The right place is an `httpOnly` cookie, which
+  JavaScript cannot read — that changes how the API hands the token out, not
+  just where the browser keeps it.
+- **Registration asks for an age and a degree programme.** Both are required by
+  the user model, which comes from a university exercise. A shoe shop has no
+  business asking either.
+- **Nothing is charged.** An order is recorded and the stock comes down. There
+  is no payment of any kind.
 - **Product images are files in the repository**, not uploads. There is no
   upload flow and no object storage.

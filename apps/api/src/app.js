@@ -7,6 +7,7 @@ import { PORT } from "./config.js";
 import userRoute from "./rutas/userRoute.js";
 import productRoute from "./rutas/productRoute.js";
 import categoryRoute from "./rutas/categoryRoute.js";
+import orderRoute from "./rutas/orderRoute.js";
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use(express.static(path.join(aqui, "../../web")));
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
 app.use("/api/categories", categoryRoute);
+app.use("/api/orders", orderRoute);
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });

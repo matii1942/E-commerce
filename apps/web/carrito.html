@@ -1,70 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrito</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Carrito — ZapasDep</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
-    <div class="wrapper">
-        <aside>
-            <header>
-                <h1 class="logo">Carrito</h1>
-            </header>
-            <nav>
-                <ul>
-                    <li>
-                        <a class="button-categoria active" href="index.html">
-                            <i class="bi bi-arrow-counterclockwise"></i>
-                            Seguir Comprando
-                        </a>
-                    </li>
-                    <li>
-                        <a class="button-categoria" href="carrito.html">
-                            <i class="bi bi-handbag"></i>
-                            Carrito
-                        </a>
-                    </li>
-                    <li id="sesion"></li>
-                </ul>
+    <header class="barra">
+        <div class="barra-fila">
+            <a class="logo" href="index.html">Zapas<span>Dep</span></a>
+
+            <form class="buscador" role="search" onsubmit="return false">
+                <input type="search" placeholder="Buscar zapatillas, remeras, gorras..."
+                       aria-label="Buscar productos" autocomplete="off"
+                       onfocus="location.href='index.html'">
+                <button type="submit" aria-label="Buscar"><i class="bi bi-search"></i></button>
+            </form>
+
+            <nav class="acciones">
+                <span id="sesion"></span>
+                <a class="accion-carrito activa" href="carrito.html" aria-label="Ver el carrito">
+                    <i class="bi bi-cart3"></i>
+                    <span id="numero" class="numero">0</span>
+                </a>
             </nav>
-            <footer>
-                <p>© 2025 ZapasDep. Todos los derechos reservados.</p>
-            </footer>
-        </aside>
-        <main>
-            <h2 class="titulo-principal">Carrito</h2>
-            <div class="contenedor-carrito">
-                <p id="carrito-aviso" class="carrito-aviso disabled"></p>
+        </div>
+    </header>
 
-                <p id="carrito-vacio" class="carrito-vacio">Tu carrito está vacío. <i class="bi bi-emoji-frown"></i></p>
+    <main class="pagina">
+        <div class="pagina-cabecera">
+            <h1 class="titulo-principal">Tu carrito</h1>
+        </div>
 
-                <div id="carrito-productos" class="carrito-productos disabled">
-                    
+        <p id="carrito-aviso" class="carrito-aviso disabled"></p>
+
+        <p id="carrito-vacio" class="estado-vacio">
+            <i class="bi bi-cart-x"></i>
+            Tu carrito está vacío.
+            <a href="index.html">Ver productos</a>
+        </p>
+
+        <div class="carrito-columnas">
+            <div id="carrito-productos" class="carrito-productos disabled"></div>
+
+            <aside id="carrito-acciones" class="carrito-acciones disabled">
+                <h2>Resumen</h2>
+                <div class="carrito-acciones-total">
+                    <span>Total</span>
+                    <strong id="total">$0</strong>
                 </div>
+                <button id="carrito-acciones-comprar" class="carrito-acciones-comprar">Comprar ahora</button>
+                <button id="carrito-acciones-vaciar" class="carrito-acciones-vaciar">Vaciar carrito</button>
+            </aside>
+        </div>
 
-                <div id="carrito-acciones" class="carrito-acciones disabled">
-                    <div class="carrito-acciones-izquierda">
-                        <button id="carrito-acciones-vaciar" class="carrito-acciones-vaciar">Vaciar carrito</button>
-                    </div>
-                    <div class="carrito-acciones-derecha">
-                        <div class="carrito-acciones-total">
-                            <p>Total:</p>
-                            <p id="total">$0</p>
-                        </div>
-                        <button id="carrito-acciones-comprar" class="carrito-acciones-comprar">Comprar ahora</button>
-                    </div>
-                </div>
+        <p id="carrito-comprado" class="estado-ok disabled">
+            <i class="bi bi-bag-check"></i>
+            Gracias por tu compra.
+        </p>
+    </main>
 
-                <p id="carrito-comprado" class="carrito-comprado disabled">Muchas gracias por tu compra. <i class="bi bi-emoji-laughing"></i></p>
+    <footer class="pie">
+        <p>© 2025 ZapasDep — proyecto de demostración, no es una tienda real.</p>
+    </footer>
 
-            </div>
-        </main>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="js/formato.js"></script>
     <script src="js/sesion.js"></script>
     <script src="js/carrito-guardado.js"></script>
     <script src="js/carrito.js"></script>

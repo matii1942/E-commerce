@@ -4,42 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi cuenta — ZapasDep</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
-    <div class="wrapper">
-        <aside>
-            <header>
-                <h1 class="logo">ZapasDep</h1>
-            </header>
-            <nav>
-                <ul>
-                    <li>
-                        <a class="button-categoria" href="index.html">
-                            <i class="bi bi-arrow-counterclockwise"></i>Seguir comprando
-                        </a>
-                    </li>
-                    <li>
-                        <a class="button-categoria" href="carrito.html">
-                            <i class="bi bi-handbag"></i>Carrito
-                        </a>
-                    </li>
-                    <li id="sesion"></li>
-                </ul>
+    <header class="barra">
+        <div class="barra-fila">
+            <a class="logo" href="index.html">Zapas<span>Dep</span></a>
+
+            <form class="buscador" role="search" onsubmit="return false">
+                <input type="search" placeholder="Buscar zapatillas, remeras, gorras..."
+                       aria-label="Buscar productos" autocomplete="off"
+                       onfocus="location.href='index.html'">
+                <button type="submit" aria-label="Buscar"><i class="bi bi-search"></i></button>
+            </form>
+
+            <nav class="acciones">
+                <span id="sesion"></span>
+                <a class="accion-carrito" href="carrito.html" aria-label="Ver el carrito">
+                    <i class="bi bi-cart3"></i>
+                    <span id="numero" class="numero">0</span>
+                </a>
             </nav>
-            <footer>
-                <p>© 2025 ZapasDep. Todos los derechos reservados.</p>
-            </footer>
-        </aside>
-        <main>
-            <h2 class="titulo-principal">Mi cuenta</h2>
+        </div>
+    </header>
+
+    <main class="pagina">
+        <div class="pagina-cabecera">
+            <h1 class="titulo-principal">Mi cuenta</h1>
+        </div>
 
             <p id="cuenta-mensaje" class="cuenta-mensaje disabled"></p>
 
             <div class="cuenta-paneles">
-                <section class="card cuenta-panel">
+                <section class="cuenta-panel">
                     <h3>Entrar</h3>
                     <form id="form-login" novalidate>
                         <label for="login-email">Correo</label>
@@ -52,7 +50,7 @@
                     </form>
                 </section>
 
-                <section class="card cuenta-panel">
+                <section class="cuenta-panel">
                     <h3>Crear una cuenta</h3>
                     <form id="form-registro" novalidate>
                         <label for="registro-nombre">Nombre</label>
@@ -85,10 +83,15 @@
                         <button type="submit">Crear cuenta</button>
                     </form>
                 </section>
-            </div>
-        </main>
-    </div>
+        </div>
+    </main>
+
+    <footer class="pie">
+        <p>© 2025 ZapasDep — proyecto de demostración, no es una tienda real.</p>
+    </footer>
+
     <script src="js/sesion.js"></script>
+    <script src="js/carrito-guardado.js"></script>
     <script src="js/cuenta.js"></script>
 </body>
 </html>

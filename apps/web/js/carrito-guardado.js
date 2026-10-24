@@ -63,4 +63,23 @@ const Carrito = {
   unidades(items = this.leer()) {
     return items.reduce((total, item) => total + item.cantidad, 0);
   },
+
+  /**
+   * Escribe la cantidad en el globito del carrito.
+   *
+   * Vive aca y no en la vitrina porque la barra superior esta en las tres
+   * paginas: antes el numero solo se actualizaba donde corria main.js, asi
+   * que el carrito mostraba cero mientras tenia cosas adentro.
+   */
+  pintarNumero(items = this.leer()) {
+    const globo = document.querySelector("#numero");
+
+    if (!globo) return;
+
+    const total = this.unidades(items);
+    globo.textContent = total;
+    globo.classList.toggle("disabled", total === 0);
+  },
 };
+
+document.addEventListener("DOMContentLoaded", () => Carrito.pintarNumero());

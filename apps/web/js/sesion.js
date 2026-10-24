@@ -78,19 +78,13 @@ function pintarSesion() {
 
   if (!Sesion.activa()) {
     hueco.innerHTML = `
-      <a class="button-categoria" href="cuenta.html">
-        <i class="bi bi-person"></i>Iniciar sesion
-      </a>`;
+      <a class="boton-sesion" href="cuenta.html">Ingresá</a>`;
     return;
   }
 
   hueco.innerHTML = `
-    <span class="sesion-activa" title="${Sesion.email() ?? ""}">
-      <i class="bi bi-person-check"></i>${Sesion.email() ?? "Mi cuenta"}
-    </span>
-    <button type="button" id="cerrar-sesion" class="button-categoria">
-      <i class="bi bi-box-arrow-right"></i>Salir
-    </button>`;
+    <span class="sesion-activa" title="${Sesion.email() ?? ""}">${Sesion.email() ?? "Mi cuenta"}</span>
+    <button type="button" id="cerrar-sesion" class="boton-sesion">Salir</button>`;
 
   document.querySelector("#cerrar-sesion").addEventListener("click", () => {
     Sesion.cerrar();

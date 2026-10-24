@@ -114,7 +114,7 @@ function dibujar() {
     div.innerHTML = `
       <img class="carrito-producto-imagen" src="${linea.image}" alt="${linea.name}">
       <div class="carrito-producto-titulo">
-          <small>Titulo</small>
+          <small>Título</small>
           <h3>${linea.name}</h3>
       </div>
       <div class="carrito-producto-cantidad">
@@ -123,11 +123,11 @@ function dibujar() {
       </div>
       <div class="carrito-producto-precio">
           <small>Precio</small>
-          <p>$${linea.price}</p>
+          <p>${pesos(linea.price)}</p>
       </div>
       <div class="carrito-producto-subtotal">
           <small>Subtotal</small>
-          <p>$${linea.subtotal}</p>
+          <p>${pesos(linea.subtotal)}</p>
       </div>
       <button class="carrito-producto-eliminar" id="${linea.id}"><i class="bi bi-trash-fill"></i></button>
     `;
@@ -145,7 +145,7 @@ function dibujar() {
    * calcular la API al crear el pedido, con los precios que tenga en ese
    * instante. Si los dos no coinciden, manda el del servidor.
    */
-  carritoTotal.innerText = `$${visibles.reduce((suma, linea) => suma + linea.subtotal, 0)}`;
+  carritoTotal.innerText = pesos(visibles.reduce((suma, linea) => suma + linea.subtotal, 0));
 
   mostrar("lleno");
 }
@@ -155,6 +155,7 @@ function eliminarDelCarrito(evento) {
 
   elegido = elegido.filter((item) => item.id !== id);
   Carrito.guardar(elegido);
+  Carrito.pintarNumero(elegido);
   avisar("");
   dibujar();
 }
@@ -162,6 +163,7 @@ function eliminarDelCarrito(evento) {
 botonVaciarCarrito.addEventListener("click", () => {
   elegido = [];
   Carrito.vaciar();
+  Carrito.pintarNumero(elegido);
   avisar("");
   dibujar();
 });
@@ -208,7 +210,9 @@ async function comprar() {
 
     elegido = [];
     Carrito.vaciar();
-    contenedorCarritoComprado.textContent = `Gracias por tu compra. Total: $${cuerpo.total}`;
+    Carrito.pintarNumero(elegido);
+    contenedorCarritoComprado.innerHTML =
+      `<i class="bi bi-bag-check"></i>Gracias por tu compra. Total: ${pesos(cuerpo.total)}`;
     mostrar("comprado");
   } catch (error) {
     avisar("No se pudo contactar al servidor. Reintenta en unos segundos.");

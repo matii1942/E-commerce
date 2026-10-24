@@ -152,6 +152,34 @@ the defects found by reading it, in the order they matter.
 - The cart's total read `$3000` in the markup before anything had been
   calculated — a placeholder that looked like a figure.
 
+## Deploying
+
+The host runs two commands, and both of them live in this repository rather
+than in the host's control panel:
+
+```bash
+npm run build     # npm install --prefix apps/api --omit=dev
+npm start         # npm start --prefix apps/api
+```
+
+That indirection exists because of a failure worth recording. The API used to
+sit in a folder called `BackEnd/` at the repository root. When it moved to
+`apps/api/`, nothing told the host — its build command still read
+`npm install --prefix BackEnd`, so every deploy after the move died in
+fourteen seconds with `Could not read package.json`, and the site went on
+serving a build from ten months earlier. Nobody noticed for twenty-six days,
+because a deploy that fails leaves the previous one running.
+
+The commands above move that configuration into the repository, where it
+changes in the same commit as the structure it depends on. It is the same
+argument as writing infrastructure as code: configuration that lives outside
+the repository drifts away from it silently, and you find out later than you
+would like.
+
+The environment needs `MONGODB_URI` and `JWT_SECRET`. The server refuses to
+start without the second one — a default value for a secret is worse than no
+value, because the application comes up and looks fine with the door open.
+
 ## Known limitations
 
 - **There are no automated tests.** Every defect above was found by reading,

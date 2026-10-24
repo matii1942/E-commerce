@@ -1,0 +1,10 @@
+{
+  "name": "tienda",
+  "private": true,
+  "description": "Los comandos de despliegue viven aca, en el repositorio, y no en el panel del proveedor. Ver la seccion Deploying del README.",
+  "scripts": {
+    "build": "npm install --prefix apps/api --omit=dev",
+    "start": "npm start --prefix apps/api",
+    "seed": "npm run seed --prefix apps/api"
+  }
+}
